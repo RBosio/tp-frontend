@@ -48,6 +48,13 @@ export class ListComponent implements OnInit, OnDestroy {
     })
   }
 
+  filterByCategory({ target }){
+    const value = target.value
+    if(value != 0) {
+      this.productsFiltered = this.products.filter(p => p.category.id == value)
+    }
+  }
+
   detail(id: number) {
     const idProduct = id.toString()
     this.productService.getProduct(idProduct).subscribe((result: any) => {

@@ -5,7 +5,10 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        
+        <select class="form-select" aria-label="Default select example" style="width: 20%; margin-left: auto;" (change)="filterByCategory($event)">
+          <option selected value="0">Select one category</option>
+          <option [value]="category.id" *ngFor="let category of categories;">{{category.name}}</option>
+        </select>
       </div>
     </div>
   </nav>
