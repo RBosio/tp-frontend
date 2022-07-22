@@ -35,3 +35,14 @@ export const GET_PRODUCT = gql`
     }
   }
 `
+
+export const EDIT_PRODUCT = gql`
+  mutation UpdateProduct($id: ID!, $values: ProductInput!) {
+    updateProduct(id: $id, values: $values)
+  }
+`
+
+
+// mutation ($id: ID!, $values: ProductInput!) {
+//   updateProduct(id: $id, values: $values)
+// }

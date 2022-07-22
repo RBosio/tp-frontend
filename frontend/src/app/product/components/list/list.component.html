@@ -22,31 +22,10 @@
           <p class="card-text">Price: {{product.price | currency}}</p>
           <div class="d-flex justify-content-around align-items-center">
             <button class="btn btn-success" disabled>Add to cart</button>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="detail(product.id)">Info</button>
+            <a class="btn btn-warning" [routerLink]="['detail', product.id]">Info</a>
           </div>
+            <a routerLink="edit/{{product.id}}" class="btn btn-primary mt-2 mx-auto">Editar</a>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{productDetail.name}}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <img class="image" [src]="BASE_URL+productDetail.image" width="100%" height="200px">
-        <div class="text mt-4">
-          <p>Category: {{productDetail.category.name}}</p>
-          <p>Price: {{productDetail.price | currency}}</p>
-          <p>Stock: {{productDetail.stock}}</p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

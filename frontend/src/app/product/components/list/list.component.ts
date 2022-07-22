@@ -13,12 +13,10 @@ import { ProductService } from '../../services/product.service';
 export class ListComponent implements OnInit, OnDestroy {
   categorySubscription: Subscription
   productSubscription: Subscription
-  detailSubscription: Subscription
 
   categories: CategoryI[]
   products: ProductI[]
   productsFiltered: ProductI[]
-  productDetail: ProductI
   BASE_URL: string
 
   constructor(
@@ -32,8 +30,12 @@ export class ListComponent implements OnInit, OnDestroy {
       created_at: new Date(),
       status: false
     }
-    this.productDetail = new ProductModel()
-    this.productDetail.category = category
+    this.productsFiltered = [{
+      id: 0,
+      name: '',
+      price: 0,
+      stock: 0
+    }]
   }
 
   ngOnInit(): void {
@@ -53,13 +55,6 @@ export class ListComponent implements OnInit, OnDestroy {
     if(value != 0) {
       this.productsFiltered = this.products.filter(p => p.category.id == value)
     }
-  }
-
-  detail(id: number) {
-    const idProduct = id.toString()
-    this.productService.getProduct(idProduct).subscribe((result: any) => {
-      this.productDetail = result?.data.getProduct
-    })
   }
 
   ngOnDestroy(): void {
