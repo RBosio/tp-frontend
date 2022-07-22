@@ -1,5 +1,13 @@
 # TP Frontend 2022
 
+## Enunciado
+Sistema para un supermercado utilizando Express, TypeORM con MySQL y GraphQL para el backend y Angular estilizando con Bootstrap para el frontend.
+
+### Año de cursado: 2022
+
+### Miembros:
+* Bosio, Rocco - 46812
+
 ## 1 - Enunciado
 ### 1.1 - Desarrollo
 Crear un nuevo frontend para un sitio que brinde una api pública, utilizando:
