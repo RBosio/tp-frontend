@@ -9,17 +9,23 @@ export class ProductService {
 
   async getAll(): Promise<Product[]> {
     return await this.productRepository
-    .createQueryBuilder('product')
-    .innerJoinAndSelect('product.category', 'category')
-    .getMany()
+    .find({
+      relations: {
+        category: true
+      }
+    })
   }
   
   async getOne(id: number): Promise<Product> {
     const Product = await this.productRepository
-    .createQueryBuilder('product')
-    .innerJoinAndSelect('product.category', 'category')
-    .where('product.id = :id', {id})
-    .getOne()
+    .findOne({
+      relations: {
+        category: true
+      },
+      where: {
+        id
+      }
+    })
 
     if (!Product) {
       throw new Error('Product doesn\'t exists')
@@ -29,27 +35,35 @@ export class ProductService {
   }
 
   async create(values: ProductInput): Promise<string> {
-    const result = await this.productRepository.insert(values)
+    const product = this.productRepository.create(values)
+    
+    await this.productRepository.save(product)
 
     return 'Product created'
   }
 
-  async update(id: number, values: ProductInput): Promise<string> {
-    const { affected } = await this.productRepository.update(id, values)
+  async update(values: ProductInput): Promise<string> {
+    const product = this.productRepository.create(values)
     
-    if (affected == 0) {
-      throw new Error('Product doesn\'t exists')
-    }
+    await this.productRepository.save(product)
 
     return 'Product updated'
   }
 
   async delete(id: number): Promise<string> {
-    const { affected } = await this.productRepository.update(id, {status: false})
+    const product = await this.productRepository.findOne({
+      where: {
+        id
+      }
+    })
 
-    if (affected == 0) {
+    if(!product){
       throw new Error('Product doesn\'t exists')
     }
+
+    product.status = false
+
+    await this.productRepository.save(product)
 
     return 'Product deleted'
   }

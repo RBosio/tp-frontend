@@ -1,7 +1,10 @@
-import { Field, InputType } from "type-graphql";
+import { Field, InputType, Int } from "type-graphql";
 
 @InputType()
 export class CategoryInput {
-  @Field(() => String)
-  name!: string
+  @Field(() => Int, {nullable: true})
+  id?: number
+  
+  @Field(() => String, {nullable: true})
+  name?: string
 }

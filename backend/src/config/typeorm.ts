@@ -10,6 +10,6 @@ export const conn = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   entities: [path.join(__dirname, '../entities/*{.ts,.js}')],
-  synchronize: true,
+  synchronize: JSON.parse(process.env.SYNC!),
   type: 'mysql'
 })

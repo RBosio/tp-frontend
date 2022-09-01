@@ -2,18 +2,21 @@ import { Field, Float, ID, InputType, Int } from "type-graphql";
 
 @InputType()
 export class ProductInput {
-  @Field(() => String)
-  name!: string
+  @Field(() => Int, {nullable: true})
+  id?: number
+  
+  @Field(() => String, {nullable: true})
+  name?: string
 
-  @Field(() => Float)
-  price!: number
+  @Field(() => Float, {nullable: true})
+  price?: number
 
-  @Field(() => Int)
-  stock!: number
+  @Field(() => Int, {nullable: true})
+  stock?: number
 
-  @Field(() => ID)
-  category!: number
+  @Field(() => ID, {nullable: true})
+  category?: number
 
-  @Field(() => String)
-  image!: string
+  @Field(() => String, {nullable: true})
+  image?: string
 }

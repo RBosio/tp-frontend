@@ -9,15 +9,16 @@ export class CategoryService {
 
   async getAll(): Promise<Category[]> {
     return await this.categoryRepository
-    .createQueryBuilder()
-    .getMany()
+    .find()
   }
   
   async getOne(id: number): Promise<Category> {
     const category = await this.categoryRepository
-    .createQueryBuilder()
-    .where('id = :id', {id})
-    .getOne()
+    .findOne({
+      where: {
+        id
+      }
+    })
 
     if (!category) {
       throw new Error('Category doesn\'t exists')
@@ -27,27 +28,35 @@ export class CategoryService {
   }
 
   async create(values: CategoryInput): Promise<string> {
-    const result = await this.categoryRepository.insert(values)
+    const category = this.categoryRepository.create(values)
+    
+    await this.categoryRepository.save(category)
 
     return 'Category created'
   }
 
-  async update(id: number, values: CategoryInput): Promise<string> {
-    const { affected } = await this.categoryRepository.update(id, values)
+  async update(values: CategoryInput): Promise<string> {
+    const category = this.categoryRepository.create(values)
     
-    if (affected == 0) {
-      throw new Error('Category doesn\'t exists')
-    }
+    await this.categoryRepository.save(category)
 
     return 'Category updated'
   }
 
   async delete(id: number): Promise<string> {
-    const { affected } = await this.categoryRepository.update(id, {status: false})
+    const category = await this.categoryRepository.findOne({
+      where: {
+        id
+      }
+    })
 
-    if (affected == 0) {
+    if(!category){
       throw new Error('Category doesn\'t exists')
     }
+
+    category.status = false
+    
+    await this.categoryRepository.save(category)
 
     return 'Category deleted'
   }

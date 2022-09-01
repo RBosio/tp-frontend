@@ -30,10 +30,9 @@ export class ProductResolver {
 
   @Mutation(() => String)
   async updateProduct(
-    @Arg('id', () => ID) id: number,
     @Arg('values', () => ProductInput) values: ProductInput
   ): Promise<string> {
-    return await this.productService.update(id, values)
+    return await this.productService.update(values)
   }
 
   @Mutation(() => String)

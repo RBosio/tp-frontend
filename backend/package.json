@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts --exec ts-node",
+    "dev": "npx nodemon src/index.ts --exec ts-node",
     "build": "rimraf dist/ && tsc",
     "start": "node dist/"
   },

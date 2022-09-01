@@ -30,10 +30,9 @@ export class CategoryResolver {
 
   @Mutation(() => String)
   async updateCategory(
-    @Arg('id', () => ID) id: number,
     @Arg('values', () => CategoryInput) values: CategoryInput
   ): Promise<string> {
-    return await this.categoryService.update(id, values)
+    return await this.categoryService.update(values)
   }
 
   @Mutation(() => String)
