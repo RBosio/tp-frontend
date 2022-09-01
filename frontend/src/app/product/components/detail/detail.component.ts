@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ProductI } from 'src/app/models/product.model';
 import { ProductService } from '../../services/product.service';
 
@@ -8,31 +9,31 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.css']
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnDestroy {
   id: string
   BASE_URL: string
   product: ProductI
+  productSubscription: Subscription
+  routeSubscription: Subscription
 
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService
     ) {
-      this.product = {
-        id: 0,
-        name: '',
-        price: 0,
-        stock: 0
-      }
+      this.BASE_URL = 'http://localhost:3000/img/'
     }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.routeSubscription = this.route.params.subscribe(params => {
       this.id = params['id']
-      this.BASE_URL = 'http://localhost:3000/img/'
-      this.productService.getProduct(this.id).subscribe((result: any) => {
-        this.product = result?.data.getProduct
+      this.productSubscription = this.productService.getProduct(this.id).valueChanges.subscribe((result: any) => {
+        this.product = result?.data?.getProduct
       })
     })
   }
 
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe()
+    this.productSubscription.unsubscribe()
+  }
 }

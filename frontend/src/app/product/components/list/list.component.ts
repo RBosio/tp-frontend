@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { QueryRef } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/category/services/category.service';
 import { CategoryI } from 'src/app/models/category.model';
-import { ProductI, ProductModel } from 'src/app/models/product.model';
+import { ProductI } from 'src/app/models/product.model';
 import { ProductService } from '../../services/product.service';
 
 @Component({
@@ -14,6 +15,8 @@ export class ListComponent implements OnInit, OnDestroy {
   categorySubscription: Subscription
   productSubscription: Subscription
 
+  productsQuery: QueryRef<ProductI[]>
+
   categories: CategoryI[]
   products: ProductI[]
   productsFiltered: ProductI[]
@@ -24,30 +27,19 @@ export class ListComponent implements OnInit, OnDestroy {
     private productService: ProductService
   ) {
     this.BASE_URL = 'http://localhost:3000/img/'
-    const category = {
-      id: 0,
-      name: '',
-      created_at: new Date(),
-      status: false
-    }
-    this.productsFiltered = [{
-      id: 0,
-      name: '',
-      price: 0,
-      stock: 0
-    }]
+    this.productsQuery = this.productService.getProducts()
   }
 
   ngOnInit(): void {
-    this.categorySubscription = this.categoryService.getAll().subscribe((result: any) => {
+    this.categorySubscription = this.categoryService.getAll().valueChanges.subscribe((result: any) => {
       this.categories = result?.data.getCategories
       this.categories = this.categories.filter(category => category.status)
     })
-    this.productSubscription = this.productService.getProducts().subscribe((result: any) => {
-      this.products = result?.data.getProducts
-      this.products = this.products.filter(product => product.status)
+    this.productSubscription = this.productService.getProducts().valueChanges.subscribe((result: any) => {
+      this.products = result?.data?.getProducts.filter(product => product.status)
       this.productsFiltered = this.products
     })
+    this.productsQuery.refetch()
   }
 
   filterByCategory({ target }){

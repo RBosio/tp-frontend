@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CategoryService } from 'src/app/category/services/category.service';
@@ -11,8 +11,10 @@ import { ProductService } from '../../services/product.service';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   categorySubscription: Subscription
+  productSubscription: Subscription
+  routeSubscription: Subscription
 
   categories: CategoryI[]
   id: string
@@ -25,24 +27,17 @@ export class EditComponent implements OnInit {
     private router: Router,
     private productService: ProductService
     ) {
-      this.product = {
-        id: 0,
-        name: "",
-        price: 0,
-        stock: 0,
-        image: ''
-      }
+      this.BASE_URL = 'http://localhost:3000/img/'
     }
 
-  ngOnInit(): void {
-    this.categorySubscription = this.categoryService.getAll().subscribe((result: any) => {
-      this.categories = result?.data.getCategories
+    ngOnInit(): void {
+      this.categorySubscription = this.categoryService.getAll().valueChanges.subscribe((result: any) => {
+      this.categories = result?.data?.getCategories
       this.categories = this.categories.filter(category => category.status)
     })
-    this.route.params.subscribe(params => {
+    this.routeSubscription = this.route.params.subscribe(params => {
       this.id = params['id']
-      this.BASE_URL = 'http://localhost:3000/img/'
-      this.productService.getProduct(this.id).subscribe((result: any) => {
+      this.productSubscription = this.productService.getProduct(this.id).valueChanges.subscribe((result: any) => {
         this.product = result?.data.getProduct
       })
     })
@@ -51,18 +46,24 @@ export class EditComponent implements OnInit {
   editProduct($event: any, name: HTMLInputElement, price: HTMLInputElement, stock: HTMLInputElement, category: HTMLSelectElement){
     $event.preventDefault()
     if(name.value != "" && price.value != "" && stock.value != "" && category.value != "0"){
-      const id = this.product.id.toString()
+      const id = this.product.id
       const product: ProductModel1 = {
+        id: Number(id),
         name: name.value,
         price: Number(price.value),
         stock: Number(stock.value),
-        category: Number(category.value),
-        image: this.product.image
+        category: Number(category.value)
       }
       
-      this.productService.editProduct(id, product).subscribe(() => {
+      this.productService.editProduct(product).subscribe(() => {
         this.router.navigateByUrl('product')
       })
     }
+  }
+
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe()
+    this.categorySubscription.unsubscribe()
+    this.productSubscription.unsubscribe()
   }
 }

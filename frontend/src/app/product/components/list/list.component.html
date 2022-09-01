@@ -13,18 +13,20 @@
     </div>
   </nav>
 
-  <div class="row">
-    <div class="col-md-3 mt-2" align="center" *ngFor="let product of productsFiltered">
-      <div class="card" style="width: 14rem;">
-        <img [src]="BASE_URL+product.image" class="card-img-top" style="height: 150px;">
-        <div class="card-body">
-          <h5 class="card-title">{{product.name}}</h5>
-          <p class="card-text">Price: {{product.price | currency}}</p>
-          <div class="d-flex justify-content-around align-items-center">
-            <button class="btn btn-success" disabled>Add to cart</button>
-            <a class="btn btn-warning" [routerLink]="['detail', product.id]">Info</a>
+  <div *ngIf="productsFiltered">
+    <div class="row">
+      <div class="col-md-3 mt-2" align="center" *ngFor="let product of productsFiltered">
+        <div class="card" style="width: 14rem;">
+          <img [src]="BASE_URL+product.image" class="card-img-top" style="height: 150px;">
+          <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+            <p class="card-text">Price: {{product.price | currency}}</p>
+            <div class="d-flex justify-content-around align-items-center">
+              <button class="btn btn-success" disabled>Add to cart</button>
+              <a class="btn btn-warning" [routerLink]="['detail', product.id]">Info</a>
+            </div>
+              <a routerLink="edit/{{product.id}}" class="btn btn-primary mt-2 mx-auto">Editar</a>
           </div>
-            <a routerLink="edit/{{product.id}}" class="btn btn-primary mt-2 mx-auto">Editar</a>
         </div>
       </div>
     </div>

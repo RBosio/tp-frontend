@@ -1,45 +1,49 @@
 import { gql } from "apollo-angular";
 
 export const GET_PRODUCTS = gql`
-  {
-    getProducts{
+  query GetProducts {
+    getProducts {
       id
       name
       price
       stock
       created_at
-      image
-      status
       category {
         id
+        name
+        created_at
+        status
       }
+      image
+      status
     }
   }
 `
 
 export const GET_PRODUCT = gql`
-  query ($id: ID!) {
+  query GetProduct($id: ID!) {
     getProduct(id: $id) {
       id
       name
       price
       stock
       created_at
-      image
-      status
       category {
         id
         name
         created_at
+        status
       }
+      image
+      status
     }
   }
 `
 
 export const EDIT_PRODUCT = gql`
-  mutation UpdateProduct($id: ID!, $values: ProductInput!) {
-    updateProduct(id: $id, values: $values)
-  }
+  mutation UpdateProduct($values: ProductInput!) {
+    updateProduct(values: $values)
+}
 `
 
 
